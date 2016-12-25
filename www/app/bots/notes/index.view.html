@@ -1,0 +1,20 @@
+<ion-view title="Notes">
+  <ion-nav-buttons side="left">
+    <button menu-toggle="left"class="button button-icon icon ion-navicon"></button>
+  </ion-nav-buttons>
+
+  <ion-content class="padding">
+    <div class="card" ng-repeat="note in vm.notes">
+      <div class="item item-divider">
+        {{note.title || 'Untitled Note'}}
+      </div>
+      <div class="item item-text-wrap">
+        {{note.text}}
+      </div>
+      <div ng-show="note.tag" class="item item-divider">
+        {{note.tag}}
+      </div>
+    </div>
+  </ion-content>
+
+</ion-view>

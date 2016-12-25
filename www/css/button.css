@@ -1,0 +1,71 @@
+
+/*@import "lib/font-awesome/css/font-awesome.min.css";*/
+
+#nav-button {
+  position: absolute;
+  font-size: 70px;
+  right: 65px;
+  bottom: 65px;
+  z-index: 5;
+  border-color: transparent;
+  background: none;
+  box-shadow: none;
+}
+
+.circular-menu {
+  width: 50px;
+  height: 50px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.circle {
+  width: 50px;
+  height: 50px;
+  opacity: 0;
+
+  -webkit-transform: scale(0);
+  -moz-transform: scale(0);
+  transform: scale(0);
+
+  -webkit-transition: all 0.4s ease-out;
+  -moz-transition: all 0.4s ease-out;
+  transition: all 0.4s ease-out;
+}
+
+.open.circle {
+  opacity: 1;
+
+  -webkit-transform: scale(1);
+  -moz-transform: scale(1);
+  transform: scale(1);
+}
+
+.circle a {
+  font-size: 70px;
+  text-decoration: none;
+  color: red;
+  display: block;
+  height: 40px;
+  width: 40px;
+  line-height: 40px;
+  margin-left: -20px;
+  margin-top: -20px;
+  position: absolute;
+  text-align: center;
+}
+
+.menu-button {
+  position: absolute;
+  top: calc(90% - 30px);
+  left: calc(90% - 40px);
+  text-decoration: none;
+  text-align: center;
+  color: #444;
+  border-radius: 50%;
+  display: block;
+  height: 40px;
+  width: 40px;
+  line-height: 40px;
+  padding: 10px;
+}
