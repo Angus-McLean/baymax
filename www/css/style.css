@@ -28,3 +28,18 @@ body {
         top: 64px;
     }
 }
+
+.align-right {
+  text-align: right;
+}
+
+.input-underline {
+  border-style: none;
+  background: transparent;
+}
+
+.input-underline > input {
+  border-style: solid;
+  border-color: lightgrey;
+  border-bottom-width: 1px;
+}

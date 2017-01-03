@@ -16,12 +16,11 @@ function configRoutes($stateProvider, $urlRouterProvider) {
     })
     .state('app.bots', {
       url: '/bots',
-      abstract: true,
       views: {
         'menuContent': {
-          templateUrl: 'app/bots/start.view.html'
-          //controller: 'surveysCtrl',
-          //controllerAs: 'vm'
+          templateUrl: 'app/baymax/stack/stack.view.html',
+          controller: 'stackCtrl',
+          controllerAs: 'vm'
         }
       }
     })

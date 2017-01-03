@@ -3,9 +3,9 @@
     .module('app.baymax')
     .service('Baymax', BaymaxService)
 
-    BaymaxService.$inject = ['$q', 'Recognition', 'apiAIService', 'Middlewares'];
+    BaymaxService.$inject = ['$q', 'Recognition', 'apiAIService', 'Middlewares', 'ContextStack'];
 
-    function BaymaxService ($q, Recognition, apiAIService, Middlewares) {
+    function BaymaxService ($q, Recognition, apiAIService, Middlewares, ContextStack) {
       var _self = this;
 
       // initialize speech Baymax plugin
@@ -14,7 +14,7 @@
       // attach to event listeners
       Recognition.on('result', function (event) {
         console.log('Received Recognition Event', event);
-        Middlewares.run(event.results[0][0].transcript, {}, []);
+        Middlewares.run(event.results[0][0].transcript, {}, ContextStack);
       });
 
       // wrap events with $q
@@ -26,9 +26,9 @@
 
           return Recognition;
         },
-        textAssist : function () {
+        textAssist : function (requestStr) {
           // start speech recognition segment
-          Middlewares.run('make a note to walk the dog later', {}, []);
+          Middlewares.run(requestStr, {}, ContextStack);
         },
         speechStop : function () {
 

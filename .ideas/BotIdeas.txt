@@ -1,0 +1,55 @@
+Bot Ideas :
+
+Reminders :
+  -
+  - Intents  :
+    - notifications.add
+    - notifications.get
+    - notifications.remove
+
+Time Tracking :
+  -
+
+List :
+  - Arbitrary list bot (grocery, todos, etc). Can add, remove and complete items
+  - Capabilities Overview :
+    - Change / update list tags and titles
+    - Get properties :
+      - Number of items, completed items totals, etc
+    - Add items
+      - "add ___"
+    -
+
+Grocery Bot :
+  - Maintains inventory of fridge (portions left, expiry date, etc)
+  - Capabilities Overview :
+    - Add / update quantities of foods in fridge
+      - "add 6 apples", "removed 1 apple"
+    - Categorize things as "left-overs", "frozen", etc
+      - "add 2 frozen burritos"
+    - Handle expiry dates on foods
+      - provides warnings about upcoming expiry dates
+    - Ask if I have an item / how much
+      - "how many apples do I have?"
+    - Forecasted food consumption
+      - ie every morning have milk + cereal
+      - provides warnings about food shortage
+  - Intents :
+    - groceries.addItem
+    - groceries.
+
+Grocery List Bot
+  - Generates and saves grocery lists. Helps check things off in the store
+  ** integrates heavily with Grocery Bot
+  - Capabilities Overview :
+    - Generate/start list for the upcoming days
+      - "Make grocery list for the next 2 days", "Generate grocery list until Friday", "Start groceries for the next 3 days"
+      - Queries Grocery Bot for forecasted foods and generates list. Puts list in context
+    - Add items to the miscellaneous list
+      - "add apples to my grocery list"
+
+
+Chef Bot :
+  - Saves, stores and helps with recipes
+  - Capabilities Overview :
+    -

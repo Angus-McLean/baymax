@@ -24,7 +24,14 @@
 
       $scope.speech = Baymax.speechAssist;
 
-      $scope.textAssist = Baymax.textAssist;
+      $scope.textAssist = function() {
+        let textPrompt = prompt('How can I help?');
+
+        //TODO : take out, just for testing purposes
+        textPrompt = textPrompt || "make a new note to "+(new Date()).getMinutes();
+
+        Baymax.textAssist(textPrompt);
+      }
 
     })
     .directive("circleFanOut", ["$interval", function($interval) {

@@ -4,15 +4,34 @@
   </ion-nav-buttons>
 
   <ion-content class="padding">
-    <div class="card" ng-repeat="note in vm.notes">
-      <div class="item item-divider">
-        {{note.title || 'Untitled Note'}}
+    <div class="card" ng-repeat="note in vm.notes | orderBy : 'doc.dateCreated':true">
+      <div class="item item-divider row">
+        <div class="col col-75">
+          <span ng-show="!vm.map.get(note).isEditing">{{note.doc.title || 'Untitled Note'}}</span>
+          <label class="item item-input input-underline" ng-show="vm.map.get(note).isEditing">
+            <input type="text" placeholder="Title" ng-model="note.doc.title">
+          </label>
+        </div>
+        <div class="col align-right">
+          <a ng-click="vm.toggleEdit(note)" ng-show="!vm.map.get(note).isEditing"><i class="icon ion-edit"></i></a>
+          <a ng-click="vm.toggleEdit(note)" ng-show="vm.map.get(note).isEditing"><i class="icon ion-ios-checkmark-empty"></i></a>
+          &nbsp;&nbsp;
+          <a ng-click="vm.delete(note)"><i class="icon ion-trash-b"></i></a>
+        </div>
       </div>
+
       <div class="item item-text-wrap">
-        {{note.text}}
+        <span ng-show="!vm.map.get(note).isEditing">{{note.doc.text}}</span>
+        <label class="item item-input" ng-show="vm.map.get(note).isEditing">
+          <textarea type="text" placeholder="Title" ng-model="note.doc.text"></textarea>
+        </label>
       </div>
-      <div ng-show="note.tag" class="item item-divider">
-        {{note.tag}}
+      <div ng-show="(note.doc.tag || vm.map.get(note).isEditing)" class="item item-divider row">
+        <span class="col col-10">Tags : </span>
+        <span class="col col-10" ng-show="!vm.map.get(note).isEditing">{{note.doc.tag}}</span>
+        <label class="item item-input input-underline col" ng-show="vm.map.get(note).isEditing">
+          <input type="text" placeholder="Tags" ng-model="note.doc.tag">
+        </label>
       </div>
     </div>
   </ion-content>

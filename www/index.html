@@ -23,13 +23,6 @@
     <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
     <link href="css/ionic.app.css" rel="stylesheet">
     -->
-    <!-- stylizing javascript -->
-    <script src="js/button.styles.js"></script>
-
-    <!-- util js -->
-    <script src="app/utils/config.js"></script>
-    <script src="app/utils/EventEmitter.shim.js"></script>
-    <script src="app/utils/ware.js"></script>
 
     <!-- ionic/angularjs js -->
     <script src="lib/ionic/js/ionic.bundle.js"></script>
@@ -37,11 +30,20 @@
     <!-- cordova script (this will be a 404 during development) -->
     <script src="cordova.js"></script>
 
+    <script type="text/javascript" src="/lib/lodash/dist/lodash.min.js"></script>
+    <script type="text/javascript" src="/lib/fuse.js/src/fuse.min.js"></script>
     <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/3.6.4/firebase.js"></script>
-
     <!-- AngularFire -->
     <script src="https://cdn.firebase.com/libs/angularfire/2.2.0/angularfire.min.js"></script>
+
+    <!-- stylizing javascript -->
+    <script src="js/button.styles.js"></script>
+
+    <!-- util js -->
+    <script src="app/utils/config.js"></script>
+    <script src="app/utils/EventEmitter.shim.js"></script>
+    <script src="app/utils/ware.js"></script>
 
     <!-- your app's js -->
     <script src="app/app.module.js"></script>
@@ -58,14 +60,17 @@
     <script src="app/baymax/baymax.module.js"></script>
     <script src="app/baymax/baymax.service.js"></script>
     <script src="app/baymax/middlewares.factory.js"></script>
+    <script src="app/baymax/stack/stack.service.js"></script>
     <script src="app/baymax/recognition.factory.js"></script>
     <script src="app/baymax/ai/apiai.service.js"></script>
+    <script src="app/baymax/stack/stack.controller.js"></script>
 
     <!-- app.bots.module -->
     <script src="app/bots/app.bots.module.js"></script>
 
     <!-- notes module -->
     <script src="app/bots/notes/notes.module.js"></script>
+    <script src="app/bots/notes/notes.factory.js"></script>
     <script src="app/bots/notes/index.controller.js"></script>
 
 

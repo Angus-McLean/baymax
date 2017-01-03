@@ -1,0 +1,32 @@
+--- High Level Goals ---
+Framework :
+  - Modules have their own built in routers
+    http://stackoverflow.com/questions/15294321/how-to-split-angularjs-application-into-smaller-modules-and-handle-routing-corre
+  - Standardized stack object
+  - Multiple Middleware steps
+    - Modules can subscribe/register functions to middlware stages
+    - Modules can mark certain middlewares as dependants? (figure out how to order middlewares)
+  - Modules can integrate with other modules
+    - ie : Make a note a reminder
+    ** need to figure out how to do this
+  - Can leverage components for interacting with
+    - ie "Iteratable" is returned when many search results are found
+    - ie "List" used in grocery lists, task lists, assignments, etc
+
+Each Module :
+  - Exposes a bot manifest
+    - Various properties (title, etc)
+    - Registers to middleware stages
+    - Handler methods
+    - Registers buttons to add to the circle menu
+    - Registers bots that it can integrate with?
+  - Routing
+    - Handles its own routing within its /botModuleName
+  - Exposes a card for its object, this way it can be displayed on the Home screen
+    - ie : NoteObject would have a card exposed so it can be displayed on the Home screen
+
+Stack :
+  - Add options object to ContextStack calls
+    - make module invisible to stack page
+    -
+  -
