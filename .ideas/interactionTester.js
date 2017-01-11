@@ -68,21 +68,6 @@ var modules = {
 			'search.search' : noop
 		},
 		objectContextName : ''
-	},
-	ListModule : {
-		clientToken : '',
-		developerToken : '',
-		parentModules : ['Record', 'Field'],
-		actions : {
-			'list.save' : function (a) {
-				context[0] = {
-					name:modules.ListModule.objectContextName,
-					moduleName : 'ListModule'
-				}
-			},
-			'list.count' : noop
-		},
-		objectContextName : 'ListObject'
 	}
 };
 
