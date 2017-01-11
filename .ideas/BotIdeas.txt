@@ -1,4 +1,13 @@
 Bot Ideas :
+- Reminders
+- Event
+- List
+- Task List
+- Time Tracking
+- Groceries
+- Personal Chef
+- Training module
+
 
 Reminders :
   -
