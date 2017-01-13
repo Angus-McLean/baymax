@@ -31,6 +31,7 @@
     <script src="cordova.js"></script>
 
     <script type="text/javascript" src="/lib/lodash/dist/lodash.min.js"></script>
+    <script type="text/javascript" src="/lib/async/dist/async.min.js"></script>
     <script type="text/javascript" src="/lib/fuse.js/src/fuse.min.js"></script>
     <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/3.6.4/firebase.js"></script>
@@ -56,14 +57,27 @@
     <!-- app.core.module -->
     <script src="app/data/data.module.js"></script>
 
+	<!-- app._baymax.module -->
+	<script src="app/_baymax/baymax.module.js"></script>
+	<script src="app/_baymax/Baymax.service.js"></script>
+	<script src="app/_baymax/runner/CommandSplit.stage.js"></script>
+	<script src="app/_baymax/runner/ModuleRouter.stage.js"></script>
+	<script src="app/_baymax/runner/Context.factory.js"></script>
+	<script src="app/_baymax/runner/Middlewares.factory.js"></script>
+	<script src="app/_baymax/runner/Runner.factory.js"></script>
+	<script src="app/_baymax/runner/BaymaxRequest.factory.js"></script>
+	<script src="app/_baymax/apiai/apiai.factory.js"></script>
+
+
+
     <!-- app.baymax.module -->
-    <script src="app/baymax/baymax.module.js"></script>
+    <!-- <script src="app/baymax/baymax.module.js"></script>
     <script src="app/baymax/baymax.service.js"></script>
     <script src="app/baymax/middlewares.factory.js"></script>
     <script src="app/baymax/stack/stack.service.js"></script>
     <script src="app/baymax/recognition.factory.js"></script>
     <script src="app/baymax/ai/apiai.service.js"></script>
-    <script src="app/baymax/stack/stack.controller.js"></script>
+    <script src="app/baymax/stack/stack.controller.js"></script> -->
 
     <!-- app.bots.module -->
     <script src="app/bots/app.bots.module.js"></script>
@@ -73,6 +87,13 @@
     <script src="app/bots/notes/notes.factory.js"></script>
     <script src="app/bots/notes/index.controller.js"></script>
 
+	<!-- RecordModule -->
+	<script src="app/bots/RecordModule/app/RecordModule.module.js"></script>
+
+	<!-- HomeworkModule -->
+	<script src="app/bots/HomeworkModule/app/HomeworkModule.module.js"></script>
+	<script src="app/bots/HomeworkModule/app/HomeworkModule.object.js"></script>
+	<script src="app/bots/HomeworkModule/app/HomeworkModule.service.js"></script>
 
 
   </head>

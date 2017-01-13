@@ -1,5 +1,8 @@
 (function () {
   angular
-    .module('app.baymax', []);
+    .module('app.baymax', [])
+	.run(function(){
+		//window.onerror = ()=> {return true;};
+	})
 
 })();

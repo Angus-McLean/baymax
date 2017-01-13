@@ -6,6 +6,9 @@
 	function MiddlewaresFactory () {
 
 		var middlewares = {};
+		var nullMiddleware = (new Ware()).use(function() {
+			setTimeout(_.last(arguments),0);
+		});
 
 		function registerMiddleware(stageName, fn) {
 			if(!middlewares[stageName]) {
@@ -18,7 +21,7 @@
 			if(middlewares[stageName]) {
 				return middlewares[stageName].run(...params);
 			} else {
-				console.error('Middleware stage doesn\'t exist');
+				return nullMiddleware.run(...params);
 			}
 		}
 
