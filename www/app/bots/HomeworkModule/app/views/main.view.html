@@ -1,0 +1,29 @@
+<ion-view title="HomeworkModule">
+  <ion-nav-buttons side="left">
+    <button menu-toggle="left"class="button button-icon icon ion-navicon"></button>
+  </ion-nav-buttons>
+
+  <ion-content class="padding">
+    <div class="card" ng-repeat="moduleObject in vm.db.docs | orderBy : 'doc.last_modified':true">
+      <div class="item item-divider row">
+        <div class="col col-75">
+          <span ng-show="!vm.map.get(moduleObject).isEditing">{{moduleObject.doc.title || 'Untitled'}}</span>
+          <label class="item item-input input-underline" ng-show="vm.map.get(moduleObject).isEditing">
+            <input type="text" placeholder="Title" ng-model="moduleObject.doc.title">
+          </label>
+        </div>
+        <div class="col align-right">
+          <a ng-click="vm.toggleEdit(moduleObject)" ng-show="!vm.map.get(moduleObject).isEditing"><i class="icon ion-edit"></i></a>
+          <a ng-click="vm.toggleEdit(moduleObject)" ng-show="vm.map.get(moduleObject).isEditing"><i class="icon ion-ios-checkmark-empty"></i></a>
+          &nbsp;&nbsp;
+          <a ng-click="vm.delete(moduleObject)"><i class="icon ion-trash-b"></i></a>
+        </div>
+      </div>
+
+	  <div class="item item-text-wrap">
+		  <pre>{{moduleObject.doc | json}}</pre>
+	  </div>
+    </div>
+  </ion-content>
+
+</ion-view>
