@@ -1,4 +1,5 @@
 (function (context) {
+
 	var indexOf;
 
 	if (typeof Array.prototype.indexOf === 'function') {
@@ -72,4 +73,9 @@
 			listener.apply(this, arguments);
 		});
 	};
+
+
+	angular.module('utils')
+	.constant('EventEmitter', EventEmitter);
+
 })(this);

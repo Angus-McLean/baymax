@@ -18,7 +18,7 @@ function configRoutes($stateProvider, $urlRouterProvider) {
       url: '/bots',
       views: {
         'menuContent': {
-          templateUrl: 'app/baymax/stack/stack.view.html',
+          templateUrl: 'app/_baymax/stack/stack.view.html',
           controller: 'stackCtrl',
           controllerAs: 'vm'
         }
@@ -35,5 +35,5 @@ function configRoutes($stateProvider, $urlRouterProvider) {
       }
     })
 
-    $urlRouterProvider.otherwise('/app');
+    $urlRouterProvider.otherwise('/app/bots');
 }

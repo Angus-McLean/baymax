@@ -3,19 +3,20 @@
     .module('app.baymax')
 	.factory('Baymax', BaymaxService);
 
-	BaymaxService.$inject = ['Runner', 'Middlewares', 'apiAIService'];
+	BaymaxService.$inject = ['Runner', 'Middlewares', 'apiAIService', 'Context'];
 
-	function BaymaxService(Runner, Middlewares, apiAIService) {
+	function BaymaxService(Runner, Middlewares, apiAIService, Context) {
 		var self = {
 			modules : {}
 		};
 
-		return {
+		var Baymax = {
 			registerModule : function (moduleJson) {
 				self.modules[moduleJson.name] = moduleJson;
 				apiAIService.registerModule(moduleJson.name, moduleJson);
 			},
 			registerMiddleware : Middlewares.registerMiddleware,
+
 			speechAssist : function () {
 				// start speech recognition segment
 				Recognition.start();
@@ -32,5 +33,9 @@
 
 			}
 		};
+
+		Baymax.context = Context;
+
+		return Baymax
 	}
 })();

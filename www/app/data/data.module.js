@@ -16,40 +16,141 @@
 
 	function FirebaseFactory($firebaseArray) {
 
-		class ModuleDataStore {
-			constructor(moduleName) {
-				this.ref = firebase.database().ref().child("modules").child(moduleName);
-				this.docs = $firebaseArray(this.ref);
-			}
+		var allDocsRef = firebase.database().ref().child('docs');
+		var allDocs = $firebaseArray(allDocsRef);
+		var allStores = {};
 
-			static formatToJson (item, config) {
-				return JSON.stringify(item, null, "\t");
+		class ModuleDataStore {
+			constructor(docName) {
+				var self = this;
+				this.name = docName;
+				this.ref = firebase.database().ref().child("modules").child(docName);
+				this.ids = $firebaseArray(this.ref);
+				this.docs = [];
+
+				this.ids.$loaded().then(function (idsArr) {
+					idsArr.forEach(({$id})=>self.docs.push(allDocs.$getRecord($id)));
+				});
 			}
 
 			add (doc) {
-				return this.docs.$add(doc).then((a)=>this.getByKey(a.key))
+				var self = this;
+				return allDocs.$add(doc)
+					.then(function (docRef) {
+						self.addKey(docRef.key);
+						_.forEach(allStores[self.name].parents, (parent)=>allStores[parent].db.addKey(docRef.key));
+						return docRef;
+					})
+					.then((a)=>this.getByKey(a.key));
 			}
 
+			addKey(key) {
+				return this.ref.child(key).set(true);
+			}
+
+			// add (doc) {
+			// 	_.forEach(allStores[this.name].parents, (parent)=>allStores[parent].add(doc));
+			// 	return this.docs.$add(doc).then((a)=>this.getByKey(a.key));
+			// }
+
 			getByKey (key) {
-				return this.docs.$getRecord(key);
+				return allDocs.$getRecord(key);
 			}
 
 			remove (doc) {
-				return this.docs.$remove(doc);
+				var self = this;
+				return  allDocs.$remove(doc)
+					.then(function (docRef) {
+						_.remove(self.docs, doc);
+						self.removeKey(docRef.key);
+						_.forEach(allStores[self.name].parents, (parent)=>allStores[parent].db.removeKey(docRef.key));
+						_.forEach(allStores[self.name].children, (child)=>allStores[child].db.removeKey(docRef.key));
+						return docRef;
+					});
+			}
+
+			removeKey (key) {
+				return this.ids.$remove(this.ids.$indexFor(key));
 			}
 
 			update (doc) {
-				return this.docs.$save(doc);
+				return allDocs.$save(doc);
 			}
 		}
 
-		function bootstrapModule(moduleName) {
-			return new ModuleDataStore(moduleName)
+		function getDataStore(docName) {
+			if(!allStores[docName]) {
+				allStores[docName] = {
+					db : new ModuleDataStore(docName),
+					parents : [],
+					children : []
+				};
+			}
+			return allStores[docName];
 		}
 
+		function bootstrapModule(docName, inheritedDocTypes) {
+			// var dataStore = new ModuleDataStore(docName);
+
+			// add parents to this docType
+			_.extend(getDataStore(docName), {
+				parents : inheritedDocTypes || []
+			});
+
+			// iterate to add this docType as a child for parentModules
+			_.forEach(inheritedDocTypes, (a) => getDataStore(a).children.push(docName));
+
+			return getDataStore(docName).db;
+		}
+
+		var ephimStore = new WeakMap();
+
+		class FirebaseDocument extends EventEmitter {
+			constructor(docType, values) {
+				super();
+
+				var defaults = {
+					type : docType,
+					date_created : Date.now(),
+					last_modified : Date.now()
+				};
+
+				ephimStore.set(this, {});
+				_.extend(this, defaults, values);
+				this.add();
+			}
+
+			add() {
+				return allStores[this.type].db.add(this)
+					.then(a=>this.ephimeral().firebaseObject = a);
+			}
+
+			update() {
+				var self = this;
+				this.last_modified = Date.now();
+				this.ephimeral().firebaseObject = this;
+				return allStores[this.type].db.update(this.fbDoc())
+					.then(function () {
+						self.ephim
+					})
+			}
+
+			ephimeral() {
+				return ephimStore.get(this);
+			}
+
+			fbDoc() {
+				return this.ephimeral().firebaseObject;
+			}
+
+			destroy() {
+				return allStores[this.type].db.remove(this.fbDoc());
+			}
+		}
 
 		return {
-			bootstrapModule : bootstrapModule
+			bootstrapModule : bootstrapModule,
+			FirebaseDocument : FirebaseDocument
 		}
 	}
 

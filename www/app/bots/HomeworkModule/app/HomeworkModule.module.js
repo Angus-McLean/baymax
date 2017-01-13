@@ -13,7 +13,7 @@
 			Baymax.registerMiddleware('_Process', function (baymaxReqObj, next) {
 				if(baymaxReqObj.destinationModule === 'HomeworkModule') {
 					HomeworkModule.process(baymaxReqObj)
-					next();
+						.then(()=>next());
 				} else {
 					next();
 				}

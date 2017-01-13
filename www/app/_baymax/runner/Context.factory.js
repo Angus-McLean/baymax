@@ -15,11 +15,19 @@
 		Middlewares.registerMiddleware('AddContext', addContextStage);
 	}
 
-	ContextFactory.$inject = [];
+	ContextFactory.$inject = ['$timeout', ];
 
-	function ContextFactory() {
+	function ContextFactory($timeout) {
 
-		var GlobalContext = {};
+		var Context = {
+			global : {},
+			stack : [],
+			setGlobalContext,
+			resetGlobalContext,
+			removeContext
+		};
+
+		var metaStore = new WeakMap().set(Context.global, {});
 
 		var resetTimerVar = null;
 
@@ -28,26 +36,37 @@
 		};
 
 		function resetGlobalContext() {
-			GlobalContext = {};
+			setGlobalContext({}, {lifetime:null});
 		}
 
 		// {name, children, lifetime}
-		function setGlobalContext (contextObj) {
-			var newContext = _.extend(defaultContextParams, contextObj);
+		function setGlobalContext (contextObj, config) {
+			var contextParams = {};
+			_.extend(contextParams, defaultContextParams, config);
 
-			if(newContext.lifetime) {
-				clearTimeout(resetTimerVar);
-				resetTimerVar = setTimeout(resetGlobalContext, newContext.lifetime);
+			if(contextParams.lifetime) {
+				$timeout.cancel(resetTimerVar);
+				resetTimerVar = $timeout(resetGlobalContext, contextParams.lifetime);
 			}
 
-			GlobalContext = newContext;
+			if(Context.global.type) {
+				Context.stack.unshift(Context.global);
+			}
+			Context.global = contextObj;
 		}
 
-		return {
-			global : GlobalContext,
-			resetGlobalContext,
-			setGlobalContext
-		};
+		function removeContext(obj) {
+			if(Context.stack.indexOf(obj) > -1) {
+				Context.stack.splice(Context.stack.indexOf(obj), 1);
+			}
+			if(_.isEqual(obj, Context.global)) {
+				Context.global = {}
+				resetGlobalContext();
+			}
+		}
+
+		return Context;
+
 	}
 
 })();

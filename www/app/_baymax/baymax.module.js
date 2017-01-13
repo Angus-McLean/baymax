@@ -1,8 +1,14 @@
 (function () {
   angular
-    .module('app.baymax', [])
+    .module('app.baymax', ['utils'])
 	.run(function(){
-		//window.onerror = ()=> {return true;};
-	})
+		var annoyingError = '["Uncaught SyntaxError: Unexpected identifier","",1,9,{}]';
+		window.onerror = function (...args) {
+			if(JSON.stringify(args) === annoyingError) {
+				return true;
+			}
+			console.log(args);
+		};
+	});
 
 })();

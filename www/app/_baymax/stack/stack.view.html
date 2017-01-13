@@ -1,0 +1,58 @@
+<ion-view title="Baymax">
+	<ion-nav-buttons side="left">
+		<button menu-toggle="left"class="button button-icon icon ion-navicon"></button>
+	</ion-nav-buttons>
+
+	<ion-content class="padding">
+		<div class="row padding">
+			<div class="col col-center">
+				<div class="card" ng-if="vm.context.global.type">
+					<div class="item item-divider row">
+						<div class="col col-center col-75">
+							<span>{{ vm.context.global.type || 'Untitled'}}</span>
+						</div>
+						<div class="col align-right">
+							&nbsp;&nbsp;
+							<a ng-click="vm.delete(vm.context.global)"><i class="icon ion-trash-b"></i></a>
+						</div>
+					</div>
+
+					<div class="item item-text-wrap">
+						<pre>{{vm.context.global.doc | json}}</pre>
+					</div>
+				</div>
+			</div>
+
+			<div class="padding-40 row" ng-if="!vm.context.global.type">
+				<h4 class="center-self text-center">"Hello, I am Baymax </br>your personal healthcare companion"</h4>
+			</div>
+		</div>
+		<div class="row">
+			<div style="width: 100%; height: 10px; border-bottom: 1px solid black; text-align: center">
+				<span style="font-size: 20px; background-color:white; padding: 0 20px;">
+					Stack <!--Padding is optional-->
+				</span>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col col-center">
+				<div class="card" ng-repeat="stackItem in vm.stack">
+					<div class="item item-divider row">
+						<div class="col col-75">
+							<span>{{ stackItem.type || 'Untitled'}}</span>
+						</div>
+						<div class="col align-right">
+							&nbsp;&nbsp;
+							<a ng-click="vm.delete(stackItem)"><i class="icon ion-trash-b"></i></a>
+						</div>
+					</div>
+
+					<div class="item item-text-wrap">
+						<pre>{{stackItem.doc | json}}</pre>
+					</div>
+				</div>
+			</div>
+		</div>
+	</ion-content>
+
+</ion-view>
