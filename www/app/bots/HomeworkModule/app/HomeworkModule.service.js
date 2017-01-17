@@ -19,6 +19,7 @@
 				var action = baymaxReqObj.result.action;
 				if(action === 'HomeworkModule.create') {
 					var homeworkObject = new HomeworkModuleObject(baymaxReqObj.result.parameters);
+					homeworkObject.save();
 					Baymax.context.setGlobalContext(homeworkObject);
 					deferred.resolve(homeworkObject);
 				} else {

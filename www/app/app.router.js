@@ -18,7 +18,7 @@ function configRoutes($stateProvider, $urlRouterProvider) {
       url: '/bots',
       views: {
         'mainContent': {
-          templateUrl: 'app/_baymax/stack/stack.view.html',
+          templateUrl: 'app/baymax/stack/stack.view.html',
           controller: 'stackCtrl',
           controllerAs: 'vm'
         }

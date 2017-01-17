@@ -16,17 +16,9 @@
 
 	function FirebaseFactory($firebaseArray) {
 
-		var baseRef = firebase.database().ref();
-		var allDocsRef = baseRef.child('docs');
+		var allDocsRef = firebase.database().ref().child('docs');
 		var allDocs = $firebaseArray(allDocsRef);
 		var allStores = {};
-
-		allDocs.$watch(function (ev) {
-			let doc = allDocs.$getRecord(ev.key);
-			if(ev.event === 'child_changed') {
-				_.filter(allStores, s=>_.find(s.db.ids, {$id:ev.key})).forEach(s=>s.db.emit('child_changed', doc));
-			}
-		})
 
 		class ModuleDataStore extends EventEmitter {
 			constructor(docName) {
@@ -36,15 +28,10 @@
 				this.ref = firebase.database().ref().child("modules").child(docName);
 				this.ids = $firebaseArray(this.ref);
 				this.docs = [];
-				// var baseRef = new firebase("https://baymax-d1cba.firebaseio.com");
-				var joinedRef = new firebase.util.NormalizedCollection(
-				  baseRef.child("modules/"+docName),
-				  baseRef.child("docs")
-				).select(
-				  docName+".style",
-				  {"key":"docs.$value","alias":"doc"}
-				).ref();
-				this.records = $firebaseArray(joinedRef);
+
+				// this.ids.$loaded().then(function (idsArr) {
+				// 	idsArr.forEach(({$id})=>self.docs.push(allDocs.$getRecord($id)));
+				// });
 
 				this.ids.$watch(function (ev) {
 
@@ -100,10 +87,6 @@
 				return this.ids.$remove(this.ids.$indexFor(key));
 			}
 
-			updateLocal (doc) {
-				_.assign(_.find(this.docs, {$id:doc.$id}), doc);
-			}
-
 			update (doc) {
 				return allDocs.$save(_.assign(this.getByKey(doc.$id), doc));
 				// return allDocs.$save(doc);
@@ -121,7 +104,7 @@
 			return allStores[docName];
 		}
 
-		function bootstrapModule(docName, inheritedDocTypes, classMixin) {
+		function bootstrapModule(docName, inheritedDocTypes) {
 			// var dataStore = new ModuleDataStore(docName);
 
 			// add parents to this docType

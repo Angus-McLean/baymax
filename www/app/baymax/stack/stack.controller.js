@@ -3,14 +3,18 @@
   angular.module('app.baymax')
     .controller('stackCtrl', StackCtrl);
 
-  StackCtrl.$inject = ['$scope', 'ContextStack'];
+  StackCtrl.$inject = ['$scope', 'Baymax'];
 
-  function StackCtrl($scope, ContextStack) {
+  function StackCtrl($scope, Baymax) {
     var _self = this;
     _self.map = new WeakMap();
-    _self.stack = ContextStack.stack;
+	_self.context = Baymax.context;
+	_self.stack = _self.context.stack;
 
-    console.log('stackCtrl', this);
+	_self.delete = function (obj) {
+		Baymax.context.removeContext(obj);
+		obj.destroy();
+	};
   }
 
 })(this);

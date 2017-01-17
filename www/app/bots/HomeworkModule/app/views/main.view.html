@@ -4,25 +4,31 @@
   </ion-nav-buttons>
 
   <ion-content class="padding">
-    <div class="card" ng-repeat="moduleObject in vm.db.docs | orderBy : 'doc.last_modified':true">
+    <div class="card" ng-repeat="moduleObject in vm.db.records | orderBy : 'last_modified':true">
       <div class="item item-divider row">
         <div class="col col-75">
-          <span ng-show="!vm.map.get(moduleObject).isEditing">{{moduleObject.doc.title || 'Untitled'}}</span>
-          <label class="item item-input input-underline" ng-show="vm.map.get(moduleObject).isEditing">
-            <input type="text" placeholder="Title" ng-model="moduleObject.doc.title">
+          <span ng-show="!vm.ephim.get(moduleObject).isEditing">{{moduleObject.title || 'Untitled'}}</span>
+          <label class="item item-input input-underline" ng-show="vm.ephim.get(moduleObject).isEditing">
+            <input type="text" placeholder="Title" ng-model="moduleObject.title">
           </label>
         </div>
         <div class="col align-right">
-          <a ng-click="vm.toggleEdit(moduleObject)" ng-show="!vm.map.get(moduleObject).isEditing"><i class="icon ion-edit"></i></a>
-          <a ng-click="vm.toggleEdit(moduleObject)" ng-show="vm.map.get(moduleObject).isEditing"><i class="icon ion-ios-checkmark-empty"></i></a>
+          <a ng-click="vm.toggleEdit(moduleObject)" ng-show="!vm.ephim.get(moduleObject).isEditing"><i class="icon ion-edit"></i></a>
+          <a ng-click="vm.toggleEdit(moduleObject)" ng-show="vm.ephim.get(moduleObject).isEditing"><i class="icon ion-ios-checkmark-empty"></i></a>
           &nbsp;&nbsp;
           <a ng-click="vm.delete(moduleObject)"><i class="icon ion-trash-b"></i></a>
         </div>
       </div>
 
-	  <div class="item item-text-wrap">
-		  <pre>{{moduleObject.doc | json}}</pre>
+	  <div class="item item-text-wrap" ng-show="!vm.ephim.get(moduleObject).isEditing">
+		  <!-- <pre>{{ vm.ephim.get(moduleObject).jsonText }}</pre> -->
+		  <pre>{{ moduleObject.doc | json }}</pre>
 	  </div>
+
+	  <div class="item item-text-wrap" ng-show="vm.ephim.get(moduleObject).isEditing">
+		  <textarea name="raw-json" rows="10" cols="80" ng-model="vm.ephim.get(moduleObject).jsonText"></textarea>
+	  </div>
+
     </div>
   </ion-content>
 

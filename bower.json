@@ -8,6 +8,8 @@
     "font-awesome": "fontawesome#^4.7.0",
     "fuse.js": "^2.6.1",
     "lodash": "^4.17.4",
-    "async": "^2.1.4"
+    "async": "^2.1.4",
+    "firebase-util": "https://github.com/GartorwareCorp/firebase-util.git#v0.3.0gt",
+    "angularfire": "^2.2.0"
   }
 }

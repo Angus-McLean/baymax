@@ -7,7 +7,7 @@
 		.config(configRoutes)
 
 	configRoutes.$inject = ['$stateProvider', '$urlRouterProvider'];
-	bootstrap.$inject = ['$http','Baymax', 'HomeworkModule'];
+	bootstrap.$inject = ['$http','Baymax', 'HomeworkModule', 'HomeworkModuleConfig'];
 
 	function configRoutes($stateProvider, $urlRouterProvider) {
 		$stateProvider.state('app.HomeworkModule', {
@@ -22,22 +22,21 @@
 		});
 	}
 
-	function bootstrap($http, Baymax, HomeworkModule) {
-		var botData = $http.get('/app/bots/HomeworkModule/bot.json').then(function (resp) {
-			Baymax.registerModule(resp.data);
-			return resp.data;
+	function bootstrap($http, Baymax, HomeworkModule, HomeworkModuleConfig) {
+
+		var botData = HomeworkModuleConfig;
+
+		Baymax.registerModule(botData);
+
+		// registerMiddleware
+		Baymax.registerMiddleware('_Process', function (baymaxReqObj, next) {
+			if(baymaxReqObj.destinationModule === 'HomeworkModule') {
+				HomeworkModule.process(baymaxReqObj)
+					.then(()=>next());
+			} else {
+				next();
+			}
 		});
 
-		botData.then(function () {
-			// registerMiddleware
-			Baymax.registerMiddleware('_Process', function (baymaxReqObj, next) {
-				if(baymaxReqObj.destinationModule === 'HomeworkModule') {
-					HomeworkModule.process(baymaxReqObj)
-						.then(()=>next());
-				} else {
-					next();
-				}
-			})
-		})
 	}
 })();

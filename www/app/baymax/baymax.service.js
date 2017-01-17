@@ -1,39 +1,41 @@
 (function () {
   angular
     .module('app.baymax')
-    .service('Baymax', BaymaxService)
+	.factory('Baymax', BaymaxService);
 
-    BaymaxService.$inject = ['$q', 'Recognition', 'apiAIService', 'Middlewares', 'ContextStack'];
+	BaymaxService.$inject = ['Runner', 'Middlewares', 'apiAIService', 'Context'];
 
-    function BaymaxService ($q, Recognition, apiAIService, Middlewares, ContextStack) {
-      var _self = this;
+	function BaymaxService(Runner, Middlewares, apiAIService, Context) {
+		var self = {
+			modules : {}
+		};
 
-      // initialize speech Baymax plugin
-      Recognition.initialize();
+		var Baymax = {
+			registerModule : function (moduleJson) {
+				self.modules[moduleJson.name] = moduleJson;
+				apiAIService.registerModule(moduleJson.name, moduleJson);
+			},
+			registerMiddleware : Middlewares.registerMiddleware,
 
-      // attach to event listeners
-      Recognition.on('result', function (event) {
-        console.log('Received Recognition Event', event);
-        Middlewares.run(event.results[0][0].transcript, {}, ContextStack);
-      });
+			speechAssist : function () {
+				// start speech recognition segment
+				Recognition.start();
 
-      // wrap events with $q
+				return Recognition;
+			},
+			textAssist : function (requestStr) {
+				// start speech recognition segment
+				Runner.startAtStage('TextRecieve', {
+					query : requestStr
+				});
+			},
+			speechStop : function () {
 
-      return {
-        speechAssist : function () {
-          // start speech recognition segment
-          Recognition.start();
+			}
+		};
 
-          return Recognition;
-        },
-        textAssist : function (requestStr) {
-          // start speech recognition segment
-          Middlewares.run(requestStr, {}, ContextStack);
-        },
-        speechStop : function () {
+		Baymax.context = Context;
 
-        }
-      };
-    }
-
-})()
+		return Baymax
+	}
+})();
