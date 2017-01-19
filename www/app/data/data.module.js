@@ -10,16 +10,18 @@
   firebase.initializeApp(config);
 
   angular.module('app.data', ['firebase'])
-	.factory('FirebaseFactory', FirebaseFactory)
+	.factory('ModuleDataStore', ModuleDataStoreFactory)
 
-	FirebaseFactory.$inject = ['$firebaseArray'];
+	ModuleDataStoreFactory.$inject = ['$firebaseArray'];
 
-	function FirebaseFactory($firebaseArray) {
+	function ModuleDataStoreFactory($firebaseArray) {
 
 		var baseRef = firebase.database().ref();
 		var allDocsRef = baseRef.child('docs');
 		var allDocs = $firebaseArray(allDocsRef);
 		var allStores = {};
+
+		window.allDocs = allDocs;
 
 		allDocs.$watch(function (ev) {
 			let doc = allDocs.$getRecord(ev.key);
@@ -37,28 +39,21 @@
 				this.ids = $firebaseArray(this.ref);
 				this.docs = [];
 				// var baseRef = new firebase("https://baymax-d1cba.firebaseio.com");
-				var joinedRef = new firebase.util.NormalizedCollection(
-				  baseRef.child("modules/"+docName),
-				  baseRef.child("docs")
+			}
+
+			initializeObjectsList (classMixin) {
+				this.joinedQuery = new firebase.util.NormalizedCollection(
+					baseRef.child("modules/"+this.name),
+					baseRef.child("docs")
 				).select(
-				  docName+".style",
-				  {"key":"docs.$value","alias":"doc"}
-				).ref();
-				this.records = $firebaseArray(joinedRef);
+					{"key":this.name+".$key","alias":"key"},
+					{"key":"docs.$value","alias":"doc"}
+				);
 
-				this.ids.$watch(function (ev) {
+				this.joinedRef = this.joinedQuery.ref()
 
-					let doc = allDocs.$getRecord(ev.key);
-					if(ev.event === 'child_added') {
-						self.docs.push(doc);
-						self.emit('child_added', doc);
-					} else if(ev.event === 'child_removed') {
-						_.remove(self.docs, doc);
-						self.emit('child_removed', doc);
-					} else if(ev.event === 'child_changed') {
-						self.emit('child_changed', doc);
-					}
-				})
+				this.records = $firebaseArray.$extend(classMixin || {})(this.joinedRef);
+
 			}
 
 			add (doc) {
@@ -76,24 +71,24 @@
 				return this.ref.child(key).set(true);
 			}
 
-			// add (doc) {
-			// 	_.forEach(allStores[this.name].parents, (parent)=>allStores[parent].add(doc));
-			// 	return this.docs.$add(doc).then((a)=>this.getByKey(a.key));
-			// }
-
 			getByKey (key) {
 				return allDocs.$getRecord(key);
 			}
 
 			remove (doc) {
 				var self = this;
-				return  allDocs.$remove(doc)
+				return  this.records.$remove(doc)
 					.then(function (docRef) {
-						self.removeKey(docRef.key);
+						// self.removeKey(docRef.key);
 						_.forEach(allStores[self.name].parents, (parent)=>allStores[parent].db.removeKey(docRef.key));
 						_.forEach(allStores[self.name].children, (child)=>allStores[child].db.removeKey(docRef.key));
 						return docRef;
-					});
+					})
+					.catch(function (e) {
+						console.error(e);
+						_.forEach(allStores[self.name].parents, (parent)=>allStores[parent].db.removeKey(doc.key));
+						_.forEach(allStores[self.name].children, (child)=>allStores[child].db.removeKey(doc.key));
+					})
 			}
 
 			removeKey (key) {
@@ -104,13 +99,16 @@
 				_.assign(_.find(this.docs, {$id:doc.$id}), doc);
 			}
 
-			update (doc) {
-				return allDocs.$save(_.assign(this.getByKey(doc.$id), doc));
+			update (joinedObj) {
+				// return this.records.$save(doc);
 				// return allDocs.$save(doc);
+				var old = this.getByKey(joinedObj.$id);
+				_.assign(old, joinedObj.doc);
+				return allDocs.$save(old);
 			}
 		}
 
-		function getDataStore(docName) {
+		ModuleDataStore.getDataStore = function getDataStore (docName) {
 			if(!allStores[docName]) {
 				allStores[docName] = {
 					db : new ModuleDataStore(docName),
@@ -121,72 +119,25 @@
 			return allStores[docName];
 		}
 
-		function bootstrapModule(docName, inheritedDocTypes, classMixin) {
+		ModuleDataStore.bootstrapModule = function(docName, inheritedDocTypes, classMixin) {
 			// var dataStore = new ModuleDataStore(docName);
 
 			// add parents to this docType
-			_.extend(getDataStore(docName), {
+			_.extend(ModuleDataStore.getDataStore(docName), {
 				parents : inheritedDocTypes || []
 			});
 
 			// iterate to add this docType as a child for parentModules
-			_.forEach(inheritedDocTypes, (a) => getDataStore(a).children.push(docName));
+			_.forEach(inheritedDocTypes, (a) => ModuleDataStore.getDataStore(a).children.push(docName));
 
-			return getDataStore(docName).db;
+			ModuleDataStore.getDataStore(docName).db.initializeObjectsList(classMixin);
+
+			return ModuleDataStore.getDataStore(docName).db;
 		}
 
-		var ephimStore = new WeakMap();
 
-		class FirebaseDocument extends EventEmitter {
-			constructor(docType, values) {
-				super();
 
-				var defaults = {
-					type : docType
-				};
-
-				ephimStore.set(this, {});
-				_.assign(this, defaults, values);
-				if(this.$id) {
-					this.ephimeral().firebaseObject = this
-				}
-			}
-
-			save() {
-				this.date_created = Date.now();
-				this.last_modified = this.date_created;
-				return allStores[this.type].db.add(this)
-					.then(a=>this.ephimeral().firebaseObject = a);
-			}
-
-			update() {
-				var self = this;
-				this.last_modified = Date.now();
-				this.ephimeral().firebaseObject = this;
-				return allStores[this.type].db.update(this.fbDoc())
-					.then(function (...args) {
-						console.log(args);
-					})
-					.catch((a)=> console.error(a));
-			}
-
-			ephimeral() {
-				return ephimStore.get(this);
-			}
-
-			fbDoc() {
-				return this.ephimeral().firebaseObject;
-			}
-
-			destroy() {
-				return allStores[this.type].db.remove(this.fbDoc());
-			}
-		}
-
-		return {
-			bootstrapModule : bootstrapModule,
-			FirebaseDocument : FirebaseDocument
-		}
+		return ModuleDataStore;
 	}
 
 

@@ -18,10 +18,13 @@
 			} else {
 				var action = baymaxReqObj.result.action;
 				if(action === 'HomeworkModule.create') {
-					var homeworkObject = new HomeworkModuleObject(baymaxReqObj.result.parameters);
-					homeworkObject.save();
-					Baymax.context.setGlobalContext(homeworkObject);
-					deferred.resolve(homeworkObject);
+					var homeworkObjectProm = HomeworkModuleObject.create(baymaxReqObj.result.parameters);
+					homeworkObjectProm.then(function (firebaseObject) {
+
+						var homeworkObject = HomeworkModuleObject.db.records.$getRecord(firebaseObject.$id);
+						Baymax.context.setGlobalContext(homeworkObject);
+						deferred.resolve(homeworkObject);
+					})
 				} else {
 					deferred.reject({
 						message : 'Got Unmatched Action'

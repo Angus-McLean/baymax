@@ -10,46 +10,30 @@
 		self.db = HomeworkModuleObject.db;
 		self.records = HomeworkModuleObject.records;
 
-		HomeworkModuleObject.events.on('child_added', function (record) {
-			console.log('setting');
-			self.ephim.set(record, {});
-			self.sendToJson(record);
-		});
-
-		self.parseFromJson = function (record) {
-			let parsedObj = null
-			try {
-				parsedObj = JSON.parse(self.ephim.get(record).jsonText);
-				_.assign(record, parsedObj);
-			} catch (e) {
-				console.error(e);
-				try {
-					parsedObj = angular.fromJson(self.ephim.get(record).jsonText);
-					_.assign(record, parsedObj);
-				} catch (e2) {
-					console.error(e2);
-					self.sendToJson(record);
-				}
+		self.getEphim = function (ref) {
+			if(!self.ephim.get(ref)) {
+				self.ephim.set(ref, {})
 			}
-		};
-
-		self.sendToJson = function (record) {
-			var fields = ['class', 'due_date', 'homework_type'];
-			// self.ephim.get(record).jsonText = JSON.stringify(_.pick(record, fields), undefined, 4);
-			self.ephim.get(record).jsonText = JSON.stringify(record, undefined, 4);
+			return self.ephim.get(ref);
 		}
 
-		self.toggleEdit = function (record) {
-			if(self.ephim.get(record).isEditing) {
-				//self.parseFromJson(record)
-				//record.update();
+		self.db.records.$watch(function (ev) {
+			let record = self.db.records.$getRecord(ev.key);
+			if(ev.event === 'child_added') {
+				self.ephim.set(record, {});
 			}
-			self.ephim.get(record).isEditing = !self.ephim.get(record).isEditing;
+		});
+
+		self.toggleEdit = function (record) {
+			if(self.getEphim(record).isEditing) {
+				record.$ephim().classObject.updateFromJson(self.getEphim(record).rawJson);
+			}
+			self.getEphim(record).rawJson = record.$class().toJson();
+			self.getEphim(record).isEditing = !self.getEphim(record).isEditing;
 		};
 
 		self.delete = function (modObj) {
-
-			modObj.destroy();
+			modObj.$ephim().classObject.destroy();
 		}
 	}
 })();

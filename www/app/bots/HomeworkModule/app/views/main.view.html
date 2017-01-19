@@ -21,12 +21,12 @@
       </div>
 
 	  <div class="item item-text-wrap" ng-show="!vm.ephim.get(moduleObject).isEditing">
-		  <!-- <pre>{{ vm.ephim.get(moduleObject).jsonText }}</pre> -->
-		  <pre>{{ moduleObject.doc | json }}</pre>
+		  <pre>{{ moduleObject.$class().toJson() }}</pre>
+		  <!-- <pre>{{ moduleObject.doc | json }}</pre> -->
 	  </div>
 
 	  <div class="item item-text-wrap" ng-show="vm.ephim.get(moduleObject).isEditing">
-		  <textarea name="raw-json" rows="10" cols="80" ng-model="vm.ephim.get(moduleObject).jsonText"></textarea>
+		  <textarea name="raw-json" rows="10" cols="80" ng-model="vm.ephim.get(moduleObject).rawJson"></textarea>
 	  </div>
 
     </div>

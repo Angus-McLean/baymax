@@ -49,7 +49,7 @@
 				resetTimerVar = $timeout(resetGlobalContext, contextParams.lifetime);
 			}
 
-			if(Context.global.type) {
+			if(Context.global.doc && Context.global.doc.type) {
 				Context.stack.unshift(Context.global);
 			}
 			Context.global = contextObj;

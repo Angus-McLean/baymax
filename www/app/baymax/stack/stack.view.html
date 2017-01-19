@@ -6,10 +6,10 @@
 	<ion-content class="padding">
 		<div class="row padding">
 			<div class="col col-center">
-				<div class="card" ng-if="vm.context.global.type">
+				<div class="card" ng-if="vm.context.global.doc.type">
 					<div class="item item-divider row">
 						<div class="col col-center col-75">
-							<span>{{ vm.context.global.type || 'Untitled'}}</span>
+							<span>{{ vm.context.global.doc.type || 'Untitled'}}</span>
 						</div>
 						<div class="col align-right">
 							&nbsp;&nbsp;
@@ -23,7 +23,7 @@
 				</div>
 			</div>
 
-			<div class="padding-40 row" ng-if="!vm.context.global.type">
+			<div class="padding-40 row" ng-if="!vm.context.global.doc.type">
 				<h4 class="center-self text-center">"Hello, I am Baymax </br>your personal healthcare companion"</h4>
 			</div>
 		</div>
@@ -39,7 +39,7 @@
 				<div class="card" ng-repeat="stackItem in vm.stack">
 					<div class="item item-divider row">
 						<div class="col col-75">
-							<span>{{ stackItem.type || 'Untitled'}}</span>
+							<span>{{ stackItem.doc.type || 'Untitled'}}</span>
 						</div>
 						<div class="col align-right">
 							&nbsp;&nbsp;
