@@ -3,8 +3,10 @@
     // require in all bot modules
     .module('app.bots', [
       'notes',
-	  'bots.HomeworkModule',
-	  'bots.RecordModule'
+  	  'bots.HomeworkModule',
+  	  'bots.ReminderModule',
+  	  'bots.GroceryModule',
+  	  'bots.RecordModule'
     ])
     .constant('BOTS_DIGEST', {
       bots : {

@@ -1,15 +1,15 @@
 (function () {
-	angular.module('bots.HomeworkModule')
-		.controller('HomeworkModule.mainCtrl', mainCtrl);
+	angular.module('bots.GroceryModule')
+		.controller('GroceryModule.mainCtrl', mainCtrl);
 
-	mainCtrl.$inject = ['HomeworkModuleObject'];
+	mainCtrl.$inject = ['GroceryModuleObject'];
 
-	function mainCtrl(HomeworkModuleObject) {
+	function mainCtrl(GroceryModuleObject) {
 		var self = this;
 		self.ephim = new WeakMap();
-		self.db = HomeworkModuleObject.db;
-		self.records = HomeworkModuleObject.records;
-
+		self.db = GroceryModuleObject.db;
+		self.records = GroceryModuleObject.records;
+		window.GroceryModuleObject = GroceryModuleObject;
 		self.getEphim = function (ref) {
 			if(!self.ephim.get(ref)) {
 				self.ephim.set(ref, {})

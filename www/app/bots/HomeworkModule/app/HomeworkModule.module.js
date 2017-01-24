@@ -15,7 +15,7 @@
 			views: {
 				'mainContent': {
 					templateUrl: 'app/bots/HomeworkModule/app/views/main.view.html',
-					controller: 'mainCtrl',
+					controller: 'HomeworkModule.mainCtrl',
 					controllerAs: 'vm'
 				}
 			}
