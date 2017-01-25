@@ -3,12 +3,21 @@
     .module('app.baymax')
 	.factory('Baymax', BaymaxService);
 
-	BaymaxService.$inject = ['Runner', 'Middlewares', 'apiAIService', 'Context'];
+	BaymaxService.$inject = ['Runner', 'Middlewares', 'apiAIService', 'Context', 'Recognition'];
 
-	function BaymaxService(Runner, Middlewares, apiAIService, Context) {
+	function BaymaxService(Runner, Middlewares, apiAIService, Context, Recognition) {
 		var self = {
 			modules : {}
 		};
+
+    // initialize speech Baymax plugin
+    Recognition.initialize();
+
+    // attach to event listeners
+    Recognition.on('result', function (event) {
+      console.log('Received Recognition Event', event);
+      Baymax.textAssist(event.results[0][0].transcript);
+    });
 
 		var Baymax = {
 			registerModule : function (moduleJson) {
@@ -35,6 +44,8 @@
 		};
 
 		Baymax.context = Context;
+
+    window.Baymax = Baymax;
 
 		return Baymax
 	}
