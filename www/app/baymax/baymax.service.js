@@ -1,39 +1,52 @@
 (function () {
   angular
     .module('app.baymax')
-    .service('Baymax', BaymaxService)
+	.factory('Baymax', BaymaxService);
 
-    BaymaxService.$inject = ['$q', 'Recognition', 'apiAIService', 'Middlewares', 'ContextStack'];
+	BaymaxService.$inject = ['Runner', 'Middlewares', 'apiAIService', 'Context', 'Recognition'];
 
-    function BaymaxService ($q, Recognition, apiAIService, Middlewares, ContextStack) {
-      var _self = this;
+	function BaymaxService(Runner, Middlewares, apiAIService, Context, Recognition) {
+		var self = {
+			modules : {}
+		};
 
-      // initialize speech Baymax plugin
-      Recognition.initialize();
+    // initialize speech Baymax plugin
+    Recognition.initialize();
 
-      // attach to event listeners
-      Recognition.on('result', function (event) {
-        console.log('Received Recognition Event', event);
-        Middlewares.run(event.results[0][0].transcript, {}, ContextStack);
-      });
+    // attach to event listeners
+    Recognition.on('result', function (event) {
+      console.log('Received Recognition Event', event);
+      Baymax.textAssist(event.results[0][0].transcript);
+    });
 
-      // wrap events with $q
+		var Baymax = {
+			registerModule : function (moduleJson) {
+				self.modules[moduleJson.name] = moduleJson;
+				apiAIService.registerModule(moduleJson.name, moduleJson);
+			},
+			registerMiddleware : Middlewares.registerMiddleware,
 
-      return {
-        speechAssist : function () {
-          // start speech recognition segment
-          Recognition.start();
+			speechAssist : function () {
+				// start speech recognition segment
+				Recognition.start();
 
-          return Recognition;
-        },
-        textAssist : function (requestStr) {
-          // start speech recognition segment
-          Middlewares.run(requestStr, {}, ContextStack);
-        },
-        speechStop : function () {
+				return Recognition;
+			},
+			textAssist : function (requestStr) {
+				// start speech recognition segment
+				Runner.startAtStage('TextRecieve', {
+					query : requestStr
+				});
+			},
+			speechStop : function () {
 
-        }
-      };
-    }
+			}
+		};
 
-})()
+		Baymax.context = Context;
+
+    window.Baymax = Baymax;
+
+		return Baymax
+	}
+})();

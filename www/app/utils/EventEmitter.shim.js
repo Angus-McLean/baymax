@@ -1,73 +1,81 @@
 (function (context) {
-  var indexOf;
 
-  if (typeof Array.prototype.indexOf === 'function') {
-    indexOf = function (haystack, needle) {
-      return haystack.indexOf(needle);
-    };
-  } else {
-    indexOf = function (haystack, needle) {
-      var i = 0, length = haystack.length, idx = -1, found = false;
+	var indexOf;
 
-      while (i < length && !found) {
-        if (haystack[i] === needle) {
-          idx = i;
-          found = true;
-        }
+	if (typeof Array.prototype.indexOf === 'function') {
+		indexOf = function (haystack, needle) {
+			return haystack.indexOf(needle);
+		};
+	} else {
+		indexOf = function (haystack, needle) {
+			var i = 0, length = haystack.length, idx = -1, found = false;
 
-        i++;
-      }
+			while (i < length && !found) {
+				if (haystack[i] === needle) {
+					idx = i;
+					found = true;
+				}
 
-      return idx;
-    };
-  };
+				i++;
+			}
+
+			return idx;
+		};
+	};
 
 
-  /* Polyfill EventEmitter. */
-  class EventEmitter {
-    constructor () {
-      this.events = {};
-    }
-  }
-  context.EventEmitter = EventEmitter;
+	/* Polyfill EventEmitter. */
+	class EventEmitter {
+		constructor () {
+			EventEmitter.events.set(this, {});
+		}
+	}
+	context.EventEmitter = EventEmitter;
 
-  EventEmitter.prototype.on = function (event, listener) {
-    if (typeof this.events[event] !== 'object') {
-      this.events[event] = [];
-    }
+	EventEmitter.events = new WeakMap();
 
-    this.events[event].push(listener);
-  };
+	EventEmitter.prototype.on = function (event, listener) {
+		if (typeof EventEmitter.events.get(this)[event] !== 'object') {
+			EventEmitter.events.get(this)[event] = [];
+		}
 
-  EventEmitter.prototype.removeListener = function (event, listener) {
-    var idx;
+		EventEmitter.events.get(this)[event].push(listener);
+	};
 
-    if (typeof this.events[event] === 'object') {
-      idx = indexOf(this.events[event], listener);
+	EventEmitter.prototype.removeListener = function (event, listener) {
+		var idx;
 
-      if (idx > -1) {
-        this.events[event].splice(idx, 1);
-      }
-    }
-  };
+		if (typeof EventEmitter.events.get(this)[event] === 'object') {
+			idx = indexOf(EventEmitter.events.get(this)[event], listener);
 
-  EventEmitter.prototype.emit = function (event) {
-    var i, listeners, length, args = [].slice.call(arguments, 1);
+			if (idx > -1) {
+				EventEmitter.events.get(this)[event].splice(idx, 1);
+			}
+		}
+	};
 
-    if (typeof this.events[event] === 'object') {
-      listeners = this.events[event].slice();
-      length = listeners.length;
+	EventEmitter.prototype.emit = function (event) {
+		var i, listeners, length, args = [].slice.call(arguments, 1);
 
-      for (i = 0; i < length; i++) {
-        listeners[i].apply(this, args);
-      }
-    }
-  };
+		if (typeof EventEmitter.events.get(this)[event] === 'object') {
+			listeners = EventEmitter.events.get(this)[event].slice();
+			length = listeners.length;
 
-  EventEmitter.prototype.once = function (event, listener) {
-    this.on(event, function g () {
-      this.removeListener(event, g);
-      listener.apply(this, arguments);
-    });
-  };
+			for (i = 0; i < length; i++) {
+				listeners[i].apply(this, args);
+			}
+		}
+	};
+
+	EventEmitter.prototype.once = function (event, listener) {
+		this.on(event, function g () {
+			this.removeListener(event, g);
+			listener.apply(this, arguments);
+		});
+	};
+
+
+	angular.module('utils')
+	.constant('EventEmitter', EventEmitter);
+
 })(this);

@@ -2,7 +2,12 @@
   angular
     // require in all bot modules
     .module('app.bots', [
-      'notes'
+      'notes',
+  	  'bots.HomeworkModule',
+  	  'bots.ReminderModule',
+  	  'bots.GroceryModule',
+  	  'bots.TimeTracker',
+  	  'bots.RecordModule'
     ])
     .constant('BOTS_DIGEST', {
       bots : {

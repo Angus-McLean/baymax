@@ -1,3 +1,5 @@
+var DB = {};
+
 function mix(...mixins) {
 	class Mix {}
 
@@ -17,17 +19,19 @@ class Record {
 
 	constructor(a) {
 		_.assign(this, a);
+		this.save();
 	}
 
 	save() {
-		console.log('Record', 'saving', this);
+		DB.Records[this.id] = this;
 	}
 	delete() {
+		delete DB.Records[this.id];
 		console.log('Record', 'deleting', this);
 	}
 	edit(a) {
 		_.assign(this, a);
-		console.log('Record', 'editing', this);
+		this.save()
 	}
 	toSpeech() {
 		return `Record titled ${title} with ${tags.join(' and ')} tags`;
@@ -80,26 +84,26 @@ class List extends Record {
 		this.list = [];
 	}
 
-	addItem(text) {
-		this.list.push({id:Math.random(), text});
+	addItem(object) {
+		this.list.push({id:Math.random(), doc : object});
 	}
 
-	removeItem({id, text}) {
-
+	removeItem(queryObj) {
+		_.remove(this.list, queryObj);
 	}
 }
 
 class CheckList extends List {
 	constructor(a) {
 		super(a);
-		this.checkedList = [];
+		this.markedItems = []
 	}
 
-	checkItem({id, text}) {
-
+	markItem(queryObj) {
+		this.markedItems.push(...(_.remove(this.list, queryObj)));
 	}
 
-	checkItem({id, text}) {
-
+	unmarkItem({id, text}) {
+		this.list.push(...(_.remove(this.markedItems, queryObj)));
 	}
 }

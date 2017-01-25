@@ -1,3 +1,8 @@
+(function () {
 
-angular
-  .module('app.core', []);
+	angular
+	  .module('app.core', [
+		  'app.baymax'
+	  ]);
+
+})();

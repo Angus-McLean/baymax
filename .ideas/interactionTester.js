@@ -11,9 +11,7 @@ var modules = {
 		clientToken : '61e62ec167fd4b38bea09cc19c5b85ee ',
 		developerToken : '89a3583d6c40441690dfe3813e08d97c',
 		parentModules : [],
-		actions : {
-
-		},
+		actions : {},
 		objectContextName : ''
 	},
 	Field : {
@@ -43,19 +41,14 @@ var modules = {
 		actions : {
 
 		},
-		objectContextName : ''
+		objectContextName : 'NoteObject'
 	},
 	ReminderModule : {
 		clientToken : '98347ed543334713bb73bbc6badbecff',
 		developerToken : 'bcb3f332d4fe43c7950bbc7f8fd6420d',
 		parentModules : ['RecordModule', 'Field'],
 		actions : {
-			'reminder.save' : function (a) {
-				context[0] = {
-					name:modules.ReminderModule.objectContextName,
-					moduleName : 'ReminderModule'
-				}
-			},
+			'reminder.save' : addToContext,
 			'reminder.silence' : noop
 		},
 		objectContextName : 'ReminderObject'
@@ -63,20 +56,71 @@ var modules = {
 	SearchModule : {
 		clientToken : 'cb70e1a0b619473fa282513457679ed5',
 		developerToken : '4b5ae722a782425194ba5736f753b084',
+		parentModules : ['RecordModule', 'Field'],
+		actions : {},
+		objectContextName : 'SearchObject'
+	},
+	CommandSeperator2 : {
+		clientToken : 'a9187be4c49d4b3498ba5d991df434c4',
+		developerToken : '9b75c9ff9225461e9f44c5016bf7232e',
 		parentModules : [],
-		actions : {
-			'search.search' : noop
-		},
+		actions : {},
 		objectContextName : ''
+	},
+	GroceryModule : {
+		clientToken : '86d1933c91914e6d90f65476d47cd6bd',
+		developerToken : 'b77a9e93295e40cfb159459a9e427708',
+		parentModules : ['RecordModule', 'Field'],
+		actions : {},
+		objectContextName : 'GroceryItem'
+	},
+	HomeworkModule : {
+		clientToken : '5d956c56a3574c669020efd6456945d2',
+		developerToken : 'c94ea1a6d12847b6ad2f0386c1dddaa8',
+		parentModules : ['RecordModule', 'Field'],
+		actions : {},
+		objectContextName : 'HomeworkItem'
 	}
 };
 
 var context = [];
 
-function assist(str) {
+function addToContext(moduleName) {
+	if(modules[moduleName].objectContextName) {
+		context[0] = {
+			name:modules[moduleName].objectContextName,
+			moduleName : moduleName
+		};
+	}
+}
+
+function assist2 (str) {
+
+	sendToModule('CommandSeperator2', {
+		query : str,
+		contexts : []
+	}).then(function (respObj) {
+		var results = [];
+		if(respObj.result.parameters.commands.length > 1) {
+			context = [];
+		}
+		var seriesCommandsPromise = respObj.result.parameters.commands.reduce(function (prevPromise, commandStr) {
+			return prevPromise.then(function (res) {
+				return processSingle(commandStr).then(function (result) {
+					res.push(result);
+					return res;
+				});
+			});
+		}, Promise.resolve([]));
+		return seriesCommandsPromise;
+	})
+}
+
+
+function processSingle(str) {
 	var responsePromises = sendQuery(str)
 
-	Promise.all(responsePromises).then(function (responseObjs) {
+	return Promise.all(responsePromises).then(function (responseObjs) {
 		var sortedArr = _.chain(responseObjs)
 			.filter((a) => {return (a && a.result.metadata.intentName != 'Default Fallback Intent')})
 			.sortBy('result.score')
@@ -91,8 +135,12 @@ function assist(str) {
 }
 
 function handleResponseObj (respObj) {
-	modules[respObj.module].actions[respObj.result.action]();
-	console.log('Handled ', respObj.result.action, respObj.result.parameters);
+	try{
+		(modules[respObj.module].actions[respObj.result.action] || addToContext)(respObj.module);
+		console.log('Handled ', respObj.result.metadata.intentName, respObj.result.action, respObj.result.parameters);
+	} catch (e) {
+		console.info(e, respObj);
+	}
 }
 
 function sendQuery (str) {
