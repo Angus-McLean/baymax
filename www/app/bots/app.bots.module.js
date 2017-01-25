@@ -6,6 +6,7 @@
   	  'bots.HomeworkModule',
   	  'bots.ReminderModule',
   	  'bots.GroceryModule',
+  	  'bots.TimeTracker',
   	  'bots.RecordModule'
     ])
     .constant('BOTS_DIGEST', {
