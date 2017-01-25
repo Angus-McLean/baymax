@@ -23,12 +23,6 @@
         <param name="ios-package" onload="true" value="CDVStatusBar" />
     </feature>
     <platform name="android">
-        <icon density="ldpi" src="resources\mipmap-ldpi\icon.png" />
-        <icon density="mdpi" src="resources\mipmap-mdpi\icon.png" />
-        <icon density="hdpi" src="resources\mipmap-hdpi\icon.png" />
-        <icon density="xhdpi" src="resources\mipmap-xhdpi\icon.png" />
-        <icon density="xxhdpi" src="resources\mipmap-xxhdpi\icon.png" />
-        <icon density="xxxhdpi" src="resources\mipmap-xxxhdpi\icon.png" />
     </platform>
     <engine name="android" spec="~6.0.0" />
     <plugin name="org.apache.cordova.speech.speechrecognition" spec="https://github.com/macdonst/SpeechRecognitionPlugin" />
