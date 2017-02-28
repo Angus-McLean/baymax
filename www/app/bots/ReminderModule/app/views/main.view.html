@@ -4,7 +4,8 @@
   </ion-nav-buttons>
 
   <ion-content class="padding">
-    <div class="card" ng-repeat="moduleObject in vm.db.records | orderBy : 'last_modified':true">
+    <div directive="default-card" ng-repeat="moduleObject in vm.db.records | orderBy : 'last_modified':true"></div>
+    <!-- <div class="card" ng-repeat="moduleObject in vm.db.records | orderBy : 'last_modified':true">
       <div class="item item-divider row">
         <div class="col col-75">
           <span ng-show="!vm.ephim.get(moduleObject).isEditing">{{moduleObject.title || 'Untitled'}}</span>
@@ -16,20 +17,20 @@
           <a ng-click="vm.toggleEdit(moduleObject)" ng-show="!vm.ephim.get(moduleObject).isEditing"><i class="icon ion-edit"></i></a>
           <a ng-click="vm.toggleEdit(moduleObject)" ng-show="vm.ephim.get(moduleObject).isEditing"><i class="icon ion-ios-checkmark-empty"></i></a>
           &nbsp;&nbsp;
+		  <button ng-click="vm.openPopover($event)"><i class="icon ion-android-more-vertical"></i></button>
           <a ng-click="vm.delete(moduleObject)"><i class="icon ion-trash-b"></i></a>
         </div>
       </div>
 
 	  <div class="item item-text-wrap" ng-show="!vm.ephim.get(moduleObject).isEditing">
 		  <pre>{{ moduleObject.$class().toJson() }}</pre>
-		  <!-- <pre>{{ moduleObject.doc | json }}</pre> -->
 	  </div>
 
 	  <div class="item item-text-wrap" ng-show="vm.ephim.get(moduleObject).isEditing">
 		  <textarea name="raw-json" rows="10" cols="80" ng-model="vm.ephim.get(moduleObject).rawJson"></textarea>
 	  </div>
 
-    </div>
+    </div> -->
   </ion-content>
 
 </ion-view>

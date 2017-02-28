@@ -5,6 +5,10 @@
                 <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
                 </button>
             </ion-nav-buttons>
+            <ion-nav-buttons side="right">
+                <button class="button button-icon button-clear ion-navicon" menu-toggle="right">
+                </button>
+            </ion-nav-buttons>
 
         </ion-nav-bar>
         <ion-nav-view name="mainContent"></ion-nav-view>
@@ -44,4 +48,7 @@
             </ion-list>
         </ion-content>
     </ion-side-menu>
+	<ion-side-menu side="right">
+		<ion-nav-view name="rightMenu"></ion-nav-view>
+	</ion-side-menu>
 </ion-side-menus>

@@ -5,9 +5,13 @@
 				"name" : "TimeTracker",
 				"api.ai" : {
 					"authentication" : {
-						"clientToken" : "98347ed543334713bb73bbc6badbecff",
-						"developerToken" : "bcb3f332d4fe43c7950bbc7f8fd6420d"
+						"clientToken" : "aea4699a14b4481a9e230d2d9d76e628",
+						"developerToken" : "0e359095d1b8435d9e779733e33eb00a"
 					}
+				},
+				"app" : {
+					"directive_name" : "time-tracker",
+					"object_name" : "TimeTrackerObject"
 				},
 				"dependencies" : [
 					"RecordModule"

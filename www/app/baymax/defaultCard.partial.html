@@ -1,0 +1,32 @@
+<div class="card">
+	<div class="item item-divider row">
+		<div class="col col-75">
+			<span>{{ moduleObject.doc.type || 'Untitled'}}</span>
+		</div>
+		<div class="col align-right">
+			&nbsp;&nbsp;
+			<!-- <a ng-click="vm.delete(moduleObject)"><i class="icon ion-trash-b"></i></a> -->
+			<button ng-click="popover.show($event)"><i class="icon ion-android-more-vertical"></i></button>
+		</div>
+	</div>
+
+	<div class="item item-text-wrap" ng-show="!moduleObject.$ephim().isEditing">
+		<pre>{{ moduleObject.$class().pickProperties() | json}}</pre>
+	</div>
+
+	<div class="item item-text-wrap" ng-show="moduleObject.$ephim().isEditing">
+		<textarea name="raw-json" rows="10" cols="80" ng-model="moduleObject.$ephim().rawJson"></textarea>
+	</div>
+	<div class="item item-divider">
+		<!-- <md-chips collection='vm.tags' ng-model='nothing' md-title='title' md-thumbnail='thumbnailUrl' md-subtitle='subtitle'/> -->
+		<chips ng-model="moduleObject.doc.tags">
+			<chip-tmpl>
+				<div class="default-chip">
+					{{chip}}
+					<a class="ion-close" remove-chip></a>
+				</div>
+			</chip-tmpl>
+			<input chip-control></input>
+		</chips>
+	</div>
+</div>

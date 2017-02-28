@@ -7,21 +7,54 @@
 
 	function TimeTrackerObjectFactory (ModuleDataStore, FirebaseDocument, $firebaseArray) {
 
+		var [sec,min,hour,day] = [1000, 1000*60, 1000*60*60, 1000*60*60*60*24];
 
 		//TODO extend RecordModuleObject
 		class TimeTrackerObject extends FirebaseDocument {
 			constructor(firebaseObject) {
 				super(firebaseObject);
+				this.editableFields = ['text', 'tags', 'startTime', 'endTime'];
+				this.updateEllapsed();
+			}
 
-				this.editableFields = ['text', 'time', 'date', 'time-period', 'date-period', 'date-time'];
+			updateEllapsed() {
+				var startDate = this.$ephim().startDate || new Date(this.getDoc().startTime);
+				var endDate;
+				if(this.getDoc().endTime) {
+					endDate = this.$ephim().endDate || new Date(this.getDoc().endTime);
+				} else {
+					endDate = new Date();
+				}
+
+				this.$ephim().startDate = startDate;
+				this.$ephim().endDate = endDate;
+				var dif = endDate - startDate;
+				this.$ephim().ellapsed = {
+					h : Math.floor(dif%day / hour),
+					m : Math.floor(dif%hour / min),
+					s : Math.floor(dif%min / sec)
+				};
+			}
+
+			toText(params) {
+				var speech = this.getDoc().text;
+				return speech;
+			}
+
+			stop() {
+				this.getDoc().endTime = Date.now();
+				return this.update();
 			}
 		}
 
 		TimeTrackerObject.create = function (objParams) {
 			var defaults = {
-				type : 'TimeTrackerObject'
+				type : 'TimeTrackerObject',
+				tags : []
 			};
 			_.defaults(objParams, defaults);
+
+			objParams.tags.push('tracking');
 
 			return FirebaseDocument.create(objParams);
 		}

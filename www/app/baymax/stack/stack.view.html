@@ -6,20 +6,8 @@
 	<ion-content class="padding">
 		<div class="row padding">
 			<div class="col col-center">
-				<div class="card" ng-if="vm.context.global.doc.type">
-					<div class="item item-divider row">
-						<div class="col col-center col-75">
-							<span>{{ vm.context.global.doc.type || 'Untitled'}}</span>
-						</div>
-						<div class="col align-right">
-							&nbsp;&nbsp;
-							<a ng-click="vm.delete(vm.context.global)"><i class="icon ion-trash-b"></i></a>
-						</div>
-					</div>
+				<div id="global-context" directive="{{vm.context.global.doc.type}}">
 
-					<div class="item item-text-wrap">
-						<pre>{{vm.context.global.doc | json}}</pre>
-					</div>
 				</div>
 			</div>
 
@@ -36,20 +24,8 @@
 		</div>
 		<div class="row">
 			<div class="col col-center">
-				<div class="card" ng-repeat="stackItem in vm.stack">
-					<div class="item item-divider row">
-						<div class="col col-75">
-							<span>{{ stackItem.doc.type || 'Untitled'}}</span>
-						</div>
-						<div class="col align-right">
-							&nbsp;&nbsp;
-							<a ng-click="vm.delete(stackItem)"><i class="icon ion-trash-b"></i></a>
-						</div>
-					</div>
-
-					<div class="item item-text-wrap">
-						<pre>{{stackItem.doc | json}}</pre>
-					</div>
+				<div ng-repeat="moduleObject in vm.stack">
+					<div directive="{{moduleObject.doc.type}}"></div>
 				</div>
 			</div>
 		</div>

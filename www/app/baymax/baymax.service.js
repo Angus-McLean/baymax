@@ -1,6 +1,6 @@
 (function () {
-  angular
-    .module('app.baymax')
+	angular
+	.module('app.baymax')
 	.factory('Baymax', BaymaxService);
 
 	BaymaxService.$inject = ['Runner', 'Middlewares', 'apiAIService', 'Context', 'Recognition'];
@@ -10,14 +10,14 @@
 			modules : {}
 		};
 
-    // initialize speech Baymax plugin
-    Recognition.initialize();
+		// initialize speech Baymax plugin
+		Recognition.initialize();
 
-    // attach to event listeners
-    Recognition.on('result', function (event) {
-      console.log('Received Recognition Event', event);
-      Baymax.textAssist(event.results[0][0].transcript);
-    });
+		// attach to event listeners
+		Recognition.on('result', function (event) {
+			console.log('Received Recognition Event', event);
+			Baymax.textAssist(event.results[0][0].transcript);
+		});
 
 		var Baymax = {
 			registerModule : function (moduleJson) {
@@ -43,9 +43,10 @@
 			}
 		};
 
+		Baymax.modules = self.modules;
 		Baymax.context = Context;
 
-    window.Baymax = Baymax;
+		window.Baymax = Baymax;
 
 		return Baymax
 	}

@@ -1,7 +1,10 @@
 (function () {
 	angular.module('bots.TimeTracker', [
 		'app.data',
-		'ionic'
+		'ionic',
+		'ionic.contrib.drawer.vertical',
+		'angular-timeline',
+		'angular.chips'
 	])
 		.run(bootstrap)
 		.config(configRoutes)
@@ -14,9 +17,12 @@
 			url : '/TimeTracker',
 			views: {
 				'mainContent': {
-					templateUrl: 'app/bots/TimeTracker/app/views/main.view.html',
+					templateUrl: 'app/bots/TimeTracker/app/views/main_plain.view.html',
 					controller: 'TimeTracker.mainCtrl',
 					controllerAs: 'vm'
+				},
+				'rightMenu': {
+					templateUrl: 'app/bots/TimeTracker/app/views/rightMenu.view.html'
 				}
 			}
 		});

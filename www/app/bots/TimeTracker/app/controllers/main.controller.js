@@ -2,9 +2,9 @@
 	angular.module('bots.TimeTracker')
 		.controller('TimeTracker.mainCtrl', mainCtrl);
 
-	mainCtrl.$inject = ['TimeTrackerObject'];
+	mainCtrl.$inject = ['TimeTrackerObject', '$interval'];
 
-	function mainCtrl(TimeTrackerObject) {
+	function mainCtrl(TimeTrackerObject, $interval) {
 		var self = this;
 		self.ephim = new WeakMap();
 		self.db = TimeTrackerObject.db;
@@ -12,16 +12,18 @@
 		window.TimeTrackerObject = TimeTrackerObject;
 		self.getEphim = function (ref) {
 			if(!self.ephim.get(ref)) {
-				self.ephim.set(ref, {})
+				self.ephim.set(ref, {});
 			}
 			return self.ephim.get(ref);
-		}
+		};
 
 		self.db.records.$watch(function (ev) {
 			let record = self.db.records.$getRecord(ev.key);
 			if(ev.event === 'child_added') {
 				self.ephim.set(record, {});
 			}
+
+			$interval(record.$class().updateEllapsed.bind(record.$class()), 1000);
 		});
 
 		self.toggleEdit = function (record) {
@@ -34,6 +36,11 @@
 
 		self.delete = function (modObj) {
 			modObj.$ephim().classObject.destroy();
-		}
+		};
+
+		self.actions = [{
+			label : 'Stop',
+			click : 'moduleObject.$class().stop()'
+		}];
 	}
 })();

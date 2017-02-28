@@ -20,11 +20,16 @@
 
 			}
 
+			getDoc() {
+				return this.val.doc;
+			}
+
 			save() {
 				this.val.doc.date_created = Date.now();
 				this.val.doc.last_modified = this.val.date_created;
 				return ModuleDataStore.getDataStore(this.val.doc.type).db.add(this.val)
-					.then(a=>this.ephimeral().firebaseObject = a);
+					.then(a=>this.val = a);
+					// .then(a=>this.ephimeral().firebaseObject = a);
 			}
 
 			update() {
@@ -37,8 +42,8 @@
 					.catch((a)=> console.error(a));
 			}
 
-			ephim() {
-				return this.ephimeral();
+			$ephim() {
+				return this.val.$ephim();
 			}
 
 			ephimeral() {
@@ -47,6 +52,10 @@
 
 			destroy() {
 				return ModuleDataStore.getDataStore(this.val.doc.type).db.remove(this.val);
+			}
+
+			pickProperties(properties) {
+				return _.pick(this.val.doc, properties || this.editableFields);
 			}
 
 			toJson(properties, replacer, spaces = 4) {

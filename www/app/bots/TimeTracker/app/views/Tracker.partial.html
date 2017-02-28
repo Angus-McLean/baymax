@@ -1,0 +1,70 @@
+<div class="card">
+	<div class="item item-divider row">
+		<div class="col col-75">
+			<span ng-show="!vm.ephim.get(moduleObject).isEditing">{{moduleObject.doc.title || moduleObject.doc.text}}</span>
+			<label class="item item-input input-underline" ng-show="vm.ephim.get(moduleObject).isEditing">
+				<input type="text" placeholder="Title" ng-model="moduleObject.title">
+			</label>
+		</div>
+		<div class="col align-right">
+			<a ng-click="vm.toggleEdit(moduleObject)" ng-show="!vm.ephim.get(moduleObject).isEditing"><i class="ion-edit"></i></a>
+			<a ng-click="vm.toggleEdit(moduleObject)" ng-show="vm.ephim.get(moduleObject).isEditing"><i class="ion-checkmark"></i></a>
+			&nbsp;&nbsp;
+			<a ng-click="vm.delete(moduleObject)"><i class="icon ion-trash-b"></i></a>
+		</div>
+	</div>
+
+	<div class="item item-text-wrap row" ng-show="!vm.ephim.get(moduleObject).isEditing">
+		<div class="col col-75">
+			<div class="row">
+
+				<div class="col text-center">
+					<h1>{{moduleObject.$ephim().ellapsed.h}}</h1>
+					<span>Hours</span>
+				</div>
+				<span><h1>:</h1></span>
+				<div class="col text-center">
+					<h1>{{moduleObject.$ephim().ellapsed.m}}</h1>
+					<span>Minutes</span>
+				</div>
+				<span><h1>:</h1></span>
+				<div class="col text-center">
+					<h1>{{moduleObject.$ephim().ellapsed.s}}</h1>
+					<span>Seconds</span>
+				</div>
+			</div>
+			<div class="row" style="padding-top:10px;">
+				<div class="col text-center">
+					<span><b>{{moduleObject.$ephim().startDate | date:'HH:mm:ss'}} - {{moduleObject.$ephim().endDate | date:'HH:mm:ss'}}</b></span>
+				</div>
+			</div>
+		</div>
+		<div class="row row-center">
+			<div class="col text-center">
+				<a ng-if="!moduleObject.doc.endTime" class="button icon-left ion-stop" style="color:red;" ng-click="moduleObject.$class().stop()"></a>
+				<a ng-if="moduleObject.doc.endTime" class="button icon-left ion-play" style="color:green;"></a>
+				<!-- <a class="button icon-left ion-edit" ng-click="vm.toggleEdit(moduleObject)" ng-show="!vm.ephim.get(moduleObject).isEditing"></a> -->
+				<!-- <a class="ion-ios-checkmark-empty" ng-click="vm.toggleEdit(moduleObject)" ng-show="vm.ephim.get(moduleObject).isEditing"></a> -->
+				<!-- <a class="button icon-left ion-close" ng-click="moduleObject.$class().destroy()"></a> -->
+			</div>
+		</div>
+
+	</div>
+	<div class="item item-text-wrap" ng-show="vm.ephim.get(moduleObject).isEditing">
+		<textarea name="raw-json" rows="10" cols="80" ng-model="vm.ephim.get(moduleObject).rawJson"></textarea>
+	</div>
+	<div class="item item-divider">
+		<!-- <md-chips collection='vm.tags' ng-model='nothing' md-title='title' md-thumbnail='thumbnailUrl' md-subtitle='subtitle'/> -->
+		<chips ng-model="moduleObject.doc.tags">
+			<chip-tmpl>
+				<div class="default-chip">
+					{{chip}}
+					<a class="ion-close" remove-chip></a>
+				</div>
+			</chip-tmpl>
+			<input chip-control></input>
+		</chips>
+	</div>
+
+
+</div>

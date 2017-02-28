@@ -1,0 +1,9 @@
+<ion-view title="TimeTracker">
+  <ion-nav-buttons side="left">
+    <button menu-toggle="left"class="button button-icon icon ion-navicon"></button>
+  </ion-nav-buttons>
+
+  <ion-content class="padding">
+	  <default-card actions="vm.actions" ng-repeat="moduleObject in vm.db.records | orderBy : 'doc.endTime':true" side="left"></default-card>
+	</ion-content>
+</ion-view>
