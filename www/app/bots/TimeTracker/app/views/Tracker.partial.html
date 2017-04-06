@@ -42,7 +42,7 @@
 		<div class="row row-center">
 			<div class="col text-center">
 				<a ng-if="!moduleObject.doc.endTime" class="button icon-left ion-stop" style="color:red;" ng-click="moduleObject.$class().stop()"></a>
-				<a ng-if="moduleObject.doc.endTime" class="button icon-left ion-play" style="color:green;"></a>
+				<a ng-if="moduleObject.doc.endTime" class="button icon-left ion-play" style="color:green;" ng-click="moduleObject.$class().startDuplicate()"></a>
 				<!-- <a class="button icon-left ion-edit" ng-click="vm.toggleEdit(moduleObject)" ng-show="!vm.ephim.get(moduleObject).isEditing"></a> -->
 				<!-- <a class="ion-ios-checkmark-empty" ng-click="vm.toggleEdit(moduleObject)" ng-show="vm.ephim.get(moduleObject).isEditing"></a> -->
 				<!-- <a class="button icon-left ion-close" ng-click="moduleObject.$class().destroy()"></a> -->

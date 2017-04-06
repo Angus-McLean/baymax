@@ -3,9 +3,9 @@
 	angular.module('bots.TimeTracker')
 		.factory('TimeTrackerObject', TimeTrackerObjectFactory);
 
-		TimeTrackerObjectFactory.$inject = ['ModuleDataStore', 'FirebaseDocument', '$firebaseArray'];
+		TimeTrackerObjectFactory.$inject = ['ModuleDataStore', 'FirebaseDocument', '$firebaseArray', '$interval'];
 
-	function TimeTrackerObjectFactory (ModuleDataStore, FirebaseDocument, $firebaseArray) {
+	function TimeTrackerObjectFactory (ModuleDataStore, FirebaseDocument, $firebaseArray, $interval) {
 
 		var [sec,min,hour,day] = [1000, 1000*60, 1000*60*60, 1000*60*60*60*24];
 
@@ -13,8 +13,8 @@
 		class TimeTrackerObject extends FirebaseDocument {
 			constructor(firebaseObject) {
 				super(firebaseObject);
+				var self = this;
 				this.editableFields = ['text', 'tags', 'startTime', 'endTime'];
-				this.updateEllapsed();
 			}
 
 			updateEllapsed() {
@@ -44,6 +44,13 @@
 			stop() {
 				this.getDoc().endTime = Date.now();
 				return this.update();
+			}
+
+			startDuplicate() {
+				var duplicateDoc = _.cloneDeep(this.getDoc());
+				duplicateDoc.endTime = undefined;
+
+				return TimeTrackerObject.create(duplicateDoc);
 			}
 		}
 

@@ -23,7 +23,14 @@
 				self.ephim.set(record, {});
 			}
 
-			$interval(record.$class().updateEllapsed.bind(record.$class()), 1000);
+			var intervalProm = $interval(function () {
+				if(record) {
+					record.$class().updateEllapsed.bind(record.$class()), 1000
+				} else {
+					$interval.cancel(intervalProm);
+				}
+			});
+
 		});
 
 		self.toggleEdit = function (record) {

@@ -13,16 +13,50 @@
 	bootstrap.$inject = ['$http','Baymax', 'TimeTracker', 'TimeTrackerConfig'];
 
 	function configRoutes($stateProvider, $urlRouterProvider) {
-		$stateProvider.state('app.TimeTracker', {
-			url : '/TimeTracker',
+		// $urlRouterProvider.when('/TimeTracker', '/TimeTracker/index');
+		$stateProvider
+		// .state('app.TimeTracker', {
+		// 	url : '/TimeTracker',
+		// 	// abstract : 'app.TimeTracker.index',
+		// 	// abstract : true,
+		// 	// resolve : {},
+		// 	template : '<ui-view/>',
+		// 	// defaultChild : 'app.TimeTracker.index'
+		// 	// views : {
+		// 	// 	'rightMenu': {
+		// 	// 		templateUrl: 'app/bots/TimeTracker/app/views/rightMenu.view.html'
+		// 	// 	},
+		// 	// 	'mainContent': {
+		// 	// 		// templateUrl: 'app/bots/TimeTracker/app/views/default.view.html',
+		// 	// 		// controller: 'TimeTracker.mainCtrl',
+		// 	// 		// controllerAs: 'vm'
+		// 	// 		template : '<ui-view/>'
+		// 	// 	}
+		// 	// }
+		// })
+		.state('app.TimeTracker-index', {
+			url : '/TimeTracker/index',
 			views: {
-				'mainContent': {
-					templateUrl: 'app/bots/TimeTracker/app/views/main_plain.view.html',
-					controller: 'TimeTracker.mainCtrl',
-					controllerAs: 'vm'
-				},
 				'rightMenu': {
 					templateUrl: 'app/bots/TimeTracker/app/views/rightMenu.view.html'
+				},
+				'mainContent': {
+					templateUrl: 'app/bots/TimeTracker/app/views/default.view.html',
+					controller: 'TimeTracker.mainCtrl',
+					controllerAs: 'vm'
+				}
+			}
+		})
+		.state('app.TimeTracker-rawJson', {
+			url : '/TimeTracker/rawJson',
+			views: {
+				'rightMenu': {
+					templateUrl: 'app/bots/TimeTracker/app/views/rightMenu.view.html'
+				},
+				'mainContent': {
+					templateUrl: 'app/bots/TimeTracker/app/views/rawJson.view.html',
+					controller: 'TimeTracker.mainCtrl',
+					controllerAs: 'vm'
 				}
 			}
 		});
