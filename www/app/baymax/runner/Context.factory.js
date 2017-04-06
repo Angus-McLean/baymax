@@ -31,27 +31,14 @@
 
 		var resetTimerVar = null;
 
-		var defaultContextParams = {
-			lifetime : 10000
-		};
-
 		function resetGlobalContext() {
-			setGlobalContext({}, {lifetime:null});
+			setGlobalContext({});
 		}
 
 		// {name, children, lifetime}
 		function setGlobalContext (contextObj, config) {
-			var contextParams = {};
-			_.extend(contextParams, defaultContextParams, config);
 
-			if(contextParams.lifetime) {
-				$timeout.cancel(resetTimerVar);
-				resetTimerVar = $timeout(resetGlobalContext, contextParams.lifetime);
-			}
-
-			if(Context.global.doc && Context.global.doc.type) {
-				Context.stack.unshift(Context.global);
-			}
+			Context.stack.unshift(contextObj);
 			Context.global = contextObj;
 		}
 

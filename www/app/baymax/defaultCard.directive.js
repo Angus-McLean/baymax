@@ -24,7 +24,7 @@
 					click : 'toggleEdit(moduleObject)'
 				}, {
 					label : 'Delete',
-					click : 'vm.delete(moduleObject)'
+					click : 'delete(moduleObject)'
 				}].concat(_.get($scope, attr.actions) || []);
 				$scope.popover = $ionicPopover.fromTemplate(template, {
 					scope: $scope
@@ -35,6 +35,11 @@
 					}
 					moduleObject.$ephim().rawJson = moduleObject.$class().toJson();
 					moduleObject.$ephim().isEditing = !moduleObject.$ephim().isEditing;
+					$scope.popover.hide();
+				}
+				$scope.delete = function (moduleObject) {
+					moduleObject.$class().destroy();
+					$scope.popover.hide();
 				}
 			}
 		};

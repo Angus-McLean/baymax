@@ -13,7 +13,7 @@
 
 	_self.delete = function (obj) {
 		Baymax.context.removeContext(obj);
-		obj.destroy();
+		obj.$class().destroy();
 	};
   }
 

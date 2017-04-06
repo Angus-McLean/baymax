@@ -5,21 +5,8 @@
 
 	<ion-content class="padding">
 		<div class="row padding">
-			<div class="col col-center">
-				<div id="global-context" directive="{{vm.context.global.doc.type}}">
-
-				</div>
-			</div>
-
-			<div class="padding-40 row" ng-if="!vm.context.global.doc.type">
+			<div class="padding-40 row" ng-if="!vm.stack || !vm.stack.length">
 				<h4 class="center-self text-center">"Hello, I am Baymax </br>your personal healthcare companion"</h4>
-			</div>
-		</div>
-		<div class="row">
-			<div style="width: 100%; height: 10px; border-bottom: 1px solid black; text-align: center">
-				<span style="font-size: 20px; background-color:white; padding: 0 20px;">
-					Stack <!--Padding is optional-->
-				</span>
 			</div>
 		</div>
 		<div class="row">
